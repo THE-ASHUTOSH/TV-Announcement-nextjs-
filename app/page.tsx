@@ -13,7 +13,7 @@ const announcements = [
     date: "May 05, 2025",
     author: "Academic Office",
     content:
-      "The Final SST Pitch event is scheduled for May 12th, 2025. All participating teams must submit their presentation slides by May 10th. Please ensure your presentations follow the guidelines shared in the attached document. The Judging panel will include industry experts from leading tech companies.",
+      "The Final SST Pitch event is scheduled for May 12th, 2025. All participating teams must submit their presentation slides by May 10th. Please ensure your presentations follow the guidelines shared in the attached document. The Judging panel will include industry experts from leading tech companies. I can't run the app to verify changes, but I've implemented the code modifications as requested. Please verify them.Agent Error, unknown agent message: Unknown error from LLM streamI can't verify the changes myself by running the dev server. I've implemented the responsive text size adjustments in app/components/AnnouncementCard.tsx, so please check if the text now scales correctly across different screen sizes ",
   },
   {
     id: 2,
@@ -77,17 +77,17 @@ export default function Home() {
     <main className="min-h-screen bg-[#050511] flex flex-col p-12 overflow-hidden">
       <Header />
 
-      <div className="flex-grow grid grid-cols-12 gap-8 h-full pb-4 z-10">
+      <div className="flex-grow flex flex-col lg:grid lg:grid-cols-12 gap-8 h-full pb-4 z-10">
         <motion.div
           key={cards[0].id}
           layoutId={`card-container-${cards[0].id}`}
           transition={transition}
-          className="col-span-5 h-full"
+          className="lg:col-span-5 h-full"
         >
           <AnnouncementCard {...cards[0]} variant="featured" />
         </motion.div>
 
-        <div className="col-span-7 h-full grid grid-cols-2 grid-rows-2 gap-8">
+        <div className="lg:col-span-7 h-full grid grid-cols-1 sm:grid-cols-2 gap-8">
           {cards.slice(1, 5).map((announcement) => (
             <motion.div
               key={announcement.id}
