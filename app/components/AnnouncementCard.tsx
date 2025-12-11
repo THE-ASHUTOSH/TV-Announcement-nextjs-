@@ -1,59 +1,77 @@
-'use client';
-
 import React from 'react';
 
 interface AnnouncementCardProps {
-    id: string;
-    icon: string;
     title: string;
-    description: string;
-    category: string;
-    backgroundColor: string;
-    className?: string; // allow passing grid classes
-    isEmergency?: boolean;
+    date: string;
+    author: string;
+    content: string;
+    variant?: 'featured' | 'standard';
+    accentColor: 'red' | 'yellow' | 'blue' | 'green';
 }
 
-export default function AnnouncementCard({
-    icon,
+const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
     title,
-    description,
-    category,
-    backgroundColor,
-    className = '',
-    isEmergency = false,
-}: AnnouncementCardProps) {
-    return (
-        <div
-            className={`
-                relative flex flex-col p-[clamp(0.8rem,1.5vw,2rem)] rounded-[clamp(8px,1vw,16px)] overflow-hidden transition-transform duration-200 border-[length:clamp(3px,0.3vw,5px)]
-                ${className}
-                ${isEmergency ? 'z-10 border-[#F44336]' : 'border-transparent'}
-            `}
-            style={{
-                backgroundColor: isEmergency ? '#333333' : backgroundColor,
-            }}
-        >
-            {isEmergency && (
-                <div className="absolute top-0 left-0 right-0 bg-[#B71C1C] px-[clamp(0.4rem,0.8vw,1rem)] py-[clamp(0.2rem,0.4vh,0.6rem)] flex items-center gap-[clamp(0.2rem,0.3vw,0.5rem)] rounded-t-[clamp(4px,0.5vw,10px)]">
-                    <span className="text-[clamp(0.6rem,1vw,1.2rem)]">🚨</span>
-                    <span className="font-bold text-white text-[clamp(0.5rem,0.8vw,1.1rem)]">Important</span>
-                </div>
-            )}
+    date,
+    author,
+    content,
+    variant = 'standard',
+    accentColor,
+}) => {
+    // Map accent colors to tailwind classes
+    // Using simple solid colors to ensure visibility first, slightly transparent text-shadow like effect
+    const colorMap = {
+        red: 'bg-red-600 shadow-[0_0_20px_rgba(220,38,38,0.6)]',
+        yellow: 'bg-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.6)]',
+        blue: 'bg-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.6)]',
+        green: 'bg-green-600 shadow-[0_0_20px_rgba(22,163,74,0.6)]',
+    };
 
-            <div className={`flex flex-col gap-[clamp(0.2rem,0.5vh,0.8rem)] h-full ${isEmergency ? 'mt-[clamp(1.2rem,2.5vh,2.5rem)]' : ''}`}>
-                <div className="text-[clamp(1.2rem,2.5vw,4rem)] leading-none mb-[clamp(0.1rem,0.3vh,0.5rem)]">
-                    {icon}
-                </div>
-                <h2 className="text-[clamp(0.8rem,1.4vw,2.2rem)] font-bold text-white leading-[1.2]">
+    const borderColor = colorMap[accentColor];
+
+    return (
+        <div className={`relative bg-[#0E101B] overflow-hidden rounded-[2rem] border border-white/5 flex flex-row ${variant === 'featured' ? 'h-full' : 'h-full'}`}>
+
+            {/* Left Accent Bar - Now a flex item so it CANNOT be hidden */}
+            <div className={`w-3 h-full flex-shrink-0 ${borderColor}`} />
+
+            {/* Content Container */}
+            <div className={`flex flex-col h-full text-zinc-100 flex-grow ${variant === 'featured' ? 'p-16' : 'p-10'}`}>
+                <h2 className={`${variant === 'featured' ? 'text-2xl' : 'text-lg'} font-bold mb-3 text-white`}>
                     {title}
                 </h2>
-                <p className="text-[clamp(0.6rem,1vw,1.5rem)] text-white/90 leading-[1.4] flex-1">
-                    {description}
+
+                <div className="flex items-center gap-5 text-[10px] text-zinc-400 mb-5 font-mono tracking-wide uppercase opacity-80">
+                    <div className="flex items-center gap-2">
+                        {/* Clock Icon SVG */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        <span>Posted: {date}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        {/* User Icon SVG */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <span>By: {author}</span>
+                    </div>
+                </div>
+
+                <p className={`text-zinc-300 leading-relaxed ${variant === 'featured' ? 'text-sm' : 'text-[11px]'} flex-grow opacity-90`}>
+                    {content}
                 </p>
-                <span className="text-[clamp(0.5rem,0.7vw,1.1rem)] text-white/70 mt-auto self-start capitalize">
-                    {category}
-                </span>
+
+                {variant === 'featured' && (
+                    <div className="mt-8 flex items-end justify-end gap-4 opacity-80">
+                        <span className="text-[10px] text-zinc-400 mb-1">✓ Scan Now For More Details</span>
+                        <div className="w-24 h-24 bg-white rounded-sm flex items-center justify-center">
+                            {/* QR Code Placeholder */}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
-}
+};
+
+export default AnnouncementCard;
