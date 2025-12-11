@@ -1,63 +1,143 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Header from './components/Header';
+import AnnouncementCard from './components/AnnouncementCard';
+
+// Grid slot definitions to keep the layout stable while content moves
+const GRID_SLOTS = [
+  { id: 'slot-0', className: 'col-span-3 row-span-3' }, // Left Large
+  { id: 'slot-1', className: 'col-span-2 row-span-1' }, // Top Right 1
+  { id: 'slot-2', className: 'col-span-2 row-span-1' }, // Top Right 2
+  { id: 'slot-3', className: 'col-span-2 row-span-1' }, // Middle Right 1
+  { id: 'slot-4', className: 'col-span-2 row-span-1' }, // Middle Right 2
+];
+
+// Content Data
+const ROTATING_ANNOUNCEMENTS = [
+  {
+    id: 'featured',
+    icon: '🏫',
+    title: 'Welcome Back Students!',
+    description: 'We are excited to have everyone back on campus. Have a great semester.',
+    category: 'College',
+    backgroundColor: '#1565C0', // Darker Blue
+    isEmergency: false,
+  },
+  {
+    id: 'standard_1',
+    icon: '🏢',
+    title: 'Campus Job Fair',
+    description: 'Looking for an internship? Join the job fair next week.',
+    category: 'College',
+    backgroundColor: '#E65100', // Darker Orange
+    isEmergency: false,
+  },
+  {
+    id: 'standard_2',
+    icon: '🏈',
+    title: 'Foamppionship',
+    description: 'Our team is in finals! Come support them Friday!',
+    category: 'Sports',
+    backgroundColor: '#2E7D32', // Darker Green
+    isEmergency: false,
+  },
+  {
+    id: 'standard_3',
+    icon: '🎓',
+    title: 'Guest Lecture: AI Ethics',
+    description: 'Dr. Jane Smith on the ethics of artificial intelligence.',
+    category: 'Academic',
+    backgroundColor: '#4527A0', // Darker Purple
+    isEmergency: true,
+  },
+  {
+    id: 'standard_4',
+    icon: '🏈',
+    title: 'Foamppionship',
+    description: 'Our team is in talks at the stadium.',
+    category: 'Food Services',
+    backgroundColor: '#558B2F', // Darker Lime/Olive
+    isEmergency: false,
+  },
+];
+
+const STATIC_ANNOUNCEMENT = {
+  id: 'cafeteria',
+  icon: '🍽️',
+  title: 'Cafeteria Menu',
+  description: "Check out a week's delicious options!",
+  category: 'Food Services',
+  backgroundColor: '#FF6F00', // Darker Amber
+  gridClass: 'col-span-4 row-span-1',
+  isEmergency: false,
+};
 
 export default function Home() {
+  const [items, setItems] = useState(ROTATING_ANNOUNCEMENTS);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setItems((currentItems) => {
+        const newItems = [...currentItems];
+        const firstItem = newItems.shift();
+        if (firstItem) {
+          newItems.push(firstItem);
+        }
+        return newItems;
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div className="w-screen h-screen flex flex-col bg-[#1A1A1A]">
+      <Header />
+      <main className="flex-1 p-[clamp(0.5rem,1.5vh,2rem)] px-[clamp(1rem,2vw,3rem)] pb-[clamp(1rem,2vh,3rem)] overflow-hidden">
+        <div className="grid grid-cols-7 grid-rows-3 gap-[clamp(12px,1.5vw,30px)] h-full w-full">
+          {/* Render Rotating Items in their assigned slots */}
+          {GRID_SLOTS.map((slot, index) => {
+            const item = items[index];
+            if (!item) return null;
+
+            return (
+              <motion.div
+                key={item.id} // Key MUST be the item ID for Framer Motion to track it
+                layout // Enables automatic layout animations
+                transition={{
+                  layout: { duration: 0.8, type: "spring", bounce: 0.2 }
+                }}
+                className={`relative w-full h-full ${slot.className}`}
+              >
+                <AnnouncementCard
+                  id={item.id}
+                  icon={item.icon}
+                  title={item.title}
+                  description={item.description}
+                  category={item.category}
+                  backgroundColor={item.backgroundColor}
+                  className="w-full h-full"
+                  isEmergency={item.isEmergency}
+                />
+              </motion.div>
+            );
+          })}
+
+          {/* Static Cafeteria Card */}
+          <div className={STATIC_ANNOUNCEMENT.gridClass}>
+            <AnnouncementCard
+              id={STATIC_ANNOUNCEMENT.id}
+              icon={STATIC_ANNOUNCEMENT.icon}
+              title={STATIC_ANNOUNCEMENT.title}
+              description={STATIC_ANNOUNCEMENT.description}
+              category={STATIC_ANNOUNCEMENT.category}
+              backgroundColor={STATIC_ANNOUNCEMENT.backgroundColor}
+              className="w-full h-full"
+              isEmergency={STATIC_ANNOUNCEMENT.isEmergency}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
         </div>
       </main>
     </div>
