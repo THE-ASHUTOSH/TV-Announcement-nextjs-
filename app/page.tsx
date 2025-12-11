@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import AnnouncementCard from './components/AnnouncementCard';
+import { vibrantColor } from './lib/colors';
 
 // Grid slot definitions to keep the layout stable while content moves
 const GRID_SLOTS = [
@@ -22,7 +23,7 @@ const ROTATING_ANNOUNCEMENTS = [
     title: 'Welcome Back Students!',
     description: 'We are excited to have everyone back on campus. Have a great semester.',
     category: 'College',
-    backgroundColor: '#1565C0', // Darker Blue
+    backgroundColor: vibrantColor(1), // Darker Blue
     isEmergency: false,
   },
   {
@@ -31,7 +32,7 @@ const ROTATING_ANNOUNCEMENTS = [
     title: 'Campus Job Fair',
     description: 'Looking for an internship? Join the job fair next week.',
     category: 'College',
-    backgroundColor: '#E65100', // Darker Orange
+    backgroundColor: vibrantColor(2), // Darker Orange
     isEmergency: false,
   },
   {
@@ -40,7 +41,7 @@ const ROTATING_ANNOUNCEMENTS = [
     title: 'Foamppionship',
     description: 'Our team is in finals! Come support them Friday!',
     category: 'Sports',
-    backgroundColor: '#2E7D32', // Darker Green
+    backgroundColor: vibrantColor(3), // Darker Green
     isEmergency: false,
   },
   {
@@ -49,7 +50,7 @@ const ROTATING_ANNOUNCEMENTS = [
     title: 'Guest Lecture: AI Ethics',
     description: 'Dr. Jane Smith on the ethics of artificial intelligence.',
     category: 'Academic',
-    backgroundColor: '#4527A0', // Darker Purple
+    backgroundColor: vibrantColor(4), // Darker Purple
     isEmergency: true,
   },
   {
@@ -58,7 +59,7 @@ const ROTATING_ANNOUNCEMENTS = [
     title: 'Foamppionship',
     description: 'Our team is in talks at the stadium.',
     category: 'Food Services',
-    backgroundColor: '#558B2F', // Darker Lime/Olive
+    backgroundColor: vibrantColor(5), // Darker Lime/Olive
     isEmergency: false,
   },
 ];
@@ -69,13 +70,29 @@ const STATIC_ANNOUNCEMENT = {
   title: 'Cafeteria Menu',
   description: "Check out a week's delicious options!",
   category: 'Food Services',
-  backgroundColor: '#FF6F00', // Darker Amber
+  backgroundColor: vibrantColor(42), // Darker Amber
   gridClass: 'col-span-4 row-span-1',
   isEmergency: false,
 };
 
 export default function Home() {
   const [items, setItems] = useState(ROTATING_ANNOUNCEMENTS);
+  const [staticAnnouncement, setStaticAnnouncement] = useState(STATIC_ANNOUNCEMENT);
+
+  // Randomize colors on mount (client-side only) to avoid hydration mismatch
+  useEffect(() => {
+    // Randomize rotating items
+    setItems(currentItems => currentItems.map(item => ({
+      ...item,
+      backgroundColor: vibrantColor(Math.floor(Math.random() * 1000000))
+    })));
+
+    // Randomize static item
+    setStaticAnnouncement(prev => ({
+      ...prev,
+      backgroundColor: vibrantColor(Math.floor(Math.random() * 1000000))
+    }));
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -126,16 +143,16 @@ export default function Home() {
           })}
 
           {/* Static Cafeteria Card */}
-          <div className={STATIC_ANNOUNCEMENT.gridClass}>
+          <div className={staticAnnouncement.gridClass}>
             <AnnouncementCard
-              id={STATIC_ANNOUNCEMENT.id}
-              icon={STATIC_ANNOUNCEMENT.icon}
-              title={STATIC_ANNOUNCEMENT.title}
-              description={STATIC_ANNOUNCEMENT.description}
-              category={STATIC_ANNOUNCEMENT.category}
-              backgroundColor={STATIC_ANNOUNCEMENT.backgroundColor}
+              id={staticAnnouncement.id}
+              icon={staticAnnouncement.icon}
+              title={staticAnnouncement.title}
+              description={staticAnnouncement.description}
+              category={staticAnnouncement.category}
+              backgroundColor={staticAnnouncement.backgroundColor}
               className="w-full h-full"
-              isEmergency={STATIC_ANNOUNCEMENT.isEmergency}
+              isEmergency={staticAnnouncement.isEmergency}
             />
           </div>
         </div>
