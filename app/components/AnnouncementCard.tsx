@@ -35,12 +35,12 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
             <div className={`w-3 h-full flex-shrink-0 ${borderColor}`} />
 
             {/* Content Container */}
-            <div className={`flex flex-col h-full text-zinc-100 flex-grow ${variant === 'featured' ? 'p-16' : 'p-10'}`}>
-                <h2 className={`${variant === 'featured' ? 'text-lg sm:text-xl lg:text-2xl' : 'text-base sm:text-lg lg:text-xl'} font-bold mb-3 text-white`}>
+            <div className={`flex flex-col h-full text-zinc-100 flex-grow ${variant === 'featured' ? 'p-8 md:p-12' : 'p-6 md:p-8'}`}>
+                <h2 className={`${variant === 'featured' ? 'text-lg sm:text-xl lg:text-2xl' : 'text-base sm:text-lg lg:text-xl'} font-bold mb-2 sm:mb-3 text-white`}>
                     {title}
                 </h2>
 
-                <div className="flex items-center gap-5 text-[10px] sm:text-xs text-zinc-400 mb-5 font-mono tracking-wide uppercase opacity-80">
+                <div className="flex items-center gap-5 text-[10px] sm:text-xs text-zinc-400 mb-3 sm:mb-5 font-mono tracking-wide uppercase opacity-80">
                     <div className="flex items-center gap-2">
                         {/* Clock Icon SVG */}
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -62,7 +62,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                 </p>
 
                 {variant === 'featured' && (
-                    <div className="mt-8 flex items-end justify-end gap-4 opacity-80">
+                    <div className="mt-4 sm:mt-8 flex items-end justify-end gap-4 opacity-80">
                         <span className="text-[10px] sm:text-xs text-zinc-400 mb-1">✓ Scan Now For More Details</span>
                         <div className="w-24 h-24 bg-white rounded-sm flex items-center justify-center">
                             {/* QR Code Placeholder */}

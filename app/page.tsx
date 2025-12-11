@@ -74,10 +74,10 @@ export default function Home() {
   const transition: Transition = { type: "spring", stiffness: 400, damping: 40 };
 
   return (
-    <main className="min-h-screen bg-[#050511] flex flex-col p-12 overflow-hidden">
+    <main className="min-h-screen bg-[#050511] flex flex-col p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden">
       <Header />
 
-      <div className="flex-grow flex flex-col lg:grid lg:grid-cols-12 gap-8 h-full pb-4 z-10">
+      <div className="flex-grow flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6 md:gap-8 h-full pb-4 z-10">
         <motion.div
           key={cards[0].id}
           layoutId={`card-container-${cards[0].id}`}
@@ -87,7 +87,7 @@ export default function Home() {
           <AnnouncementCard {...cards[0]} variant="featured" />
         </motion.div>
 
-        <div className="lg:col-span-7 h-full grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div className="lg:col-span-7 h-full grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {cards.slice(1, 5).map((announcement) => (
             <motion.div
               key={announcement.id}
